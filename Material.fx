@@ -3,7 +3,7 @@
 
 #define Toon_Tex "Default_Toon.png"
 #define Rim_Tex "Default_ColorRim.png"
-#define RimMask_Tex "Hiyori_Face_RimMask.png"
-#define EdgeMask_Tex "Hiyori_Face_Line.png"
+#define RimMask_Tex "twink_Face_RimMask.png"
+#define EdgeMask_Tex "twink_Face_Line.png"
 
 #include <shader.fxh>/////////////////////////////////////////
