@@ -158,4 +158,10 @@ technique model_tech <string MMDPASS = "object"; >
         VertexShader = compile vs_3_0 vs_model();
         PixelShader = compile ps_3_0 ps_model();
     }
+        pass outline
+    {
+        cullmode = cw;
+        VertexShader = compile vs_3_0 vs_edge();
+        PixelShader = compile ps_3_0 ps_edge();
+    }
 }
