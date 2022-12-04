@@ -8,3 +8,5 @@ float4x4 model_world : CONTROLOBJECT < string name = "(self)"; >;
 float3 mmd_cameraPosition : POSITION < string Object = "Camera"; >;
 float3 light_d : DIRECTION < string Object = "Light"; >;
 float4 egColor;
+
+bool use_subtexture;
