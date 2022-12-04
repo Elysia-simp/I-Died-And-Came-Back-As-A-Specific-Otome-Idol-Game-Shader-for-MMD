@@ -83,8 +83,8 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     //cause i know my ass isnt writing i.[func] all day
     float2 uv = i.uv;
     float3 view = normalize(i.view);
-    float3 normal = normalize(i.normal);
-    float4 color = float4(1, 1, 1, 1); //intialize color
+    float3 normal = i.normal;
+    float4 color = 1; //intialize color
     //Textures
     float4 diffuse = tex2D(diffuseSampler, uv); //self explanatory
     float4 ShadowTex = tex2D(ShadowSampler, uv); //shadow color
@@ -95,41 +95,38 @@ float4 ps_model(vs_out i, float vface : VFACE) : COLOR0
     color = diffuse;
     //dots
     float ndotv = saturate(1 - (dot(normal, view)));//rimlight
-    ndotv *= saturate(normal.y + (normal.x * 0.6)); //offset by x and y normals (we segregating xy coords by z coords now lol)
-    float ndotl =(min(dot(normal - Lightmap.r, -light_d), comp)); //toon
+    ndotv *= normalize(normal.y + (normal.x * 0.6)); //theirs is a lot more complicated than this but i'd have to write a completely different processing for this
+    //if/when i look back on this i'll make it a dedicated post effect instead
+
+    float ndotl =(min(dot(normal - Lightmap.r, -light_d), comp)); //lighting
     
-    float ndoth = dot(normal, -light_d); //specular
+    float ndoth = pow(dot(normal, normalize(view + -light_d)), 2.5) * Spec_bright; //specular
+    ndoth = clamp(0, 1, ndoth);// as far as im aware there's no texture ramp for this..
+    //so clamp we go
+
     //toon
     float4 ToonTex = tex2D(ToonSampler, ndotl); //sample ndotl
-    ToonTex = clamp(ToonTex, 0, 1);
-    //spec
-    float specularlight = pow(ndoth, 25);
     //rimlight
-    float4 rim = tex2D(RimSampler, ndotv); //I actually don't know if they used a rim ramp i just assumed
+    float4 rim = tex2D(RimSampler, ndotv); //sample ndotv
+
+    //also note for when you deal with ramp textures always CLAMP them
+    //wrap will give you several errors
+
     //lerps
-    //i probably could of used material values from the pmx file itself but eh
-    if (ModelType == 0) //everything else
-    {
+    if (use_subtexture){
         color.rgb = lerp(ShadowTex.rgb, color.rgb, ToonTex);
-        color.rgb = lerp(color.rgb, color.rgb + Lightmap.b, specularlight * 0.1);
+        color.rgb = lerp(color.rgb, color.rgb + Lightmap.b, ndoth);
         color.rgb = lerp(color.rgb, color.rgb + rim, rim);
-    }
-    else if (ModelType == 1) //eyes
-    { 
+    } else if(!use_subtexture){
         color.rgb = lerp(color.rgb, Lightmap.rgb, Lightmap.a);
         color.rgb = lerp(color.rgb, ShadowTex.rgb, ShadowTex.a);
     }
-    else if(ModelType == 2) //face
-    {
-    color.rgb = lerp(ShadowTex.rgb, color.rgb, ToonTex);
-    color.rgb = lerp(color.rgb, color.rgb + rim, rim);
-    }
-    else if(ModelType == 3)//skin
-    {
-    color.rgb = lerp(ShadowTex.rgb, color.rgb, ToonTex);
-    color.rgb = lerp(color.rgb, color.rgb + rim, rim);
-    }
+
     color.rgb *= egColor;
+    #ifdef is_stencil
+    color.a *= stencil_effectiveness;
+    #endif
+
     return color;
 }
 //end of pixel shader
@@ -141,7 +138,15 @@ technique model_SS_tech <string MMDPASS = "object_ss"; >
         VertexShader = compile vs_3_0 vs_model();
         PixelShader = compile ps_3_0 ps_model();
     }
-    
+    #ifdef is_stencil
+    pass mayu_stencil
+    {
+        cullmode = ccw;
+        ZEnable = FALSE;
+        VertexShader = compile vs_3_0 vs_model();
+        PixelShader = compile ps_3_0 ps_model();
+    }
+    #endif
     pass outline
     {
         cullmode = cw;
@@ -158,7 +163,16 @@ technique model_tech <string MMDPASS = "object"; >
         VertexShader = compile vs_3_0 vs_model();
         PixelShader = compile ps_3_0 ps_model();
     }
-        pass outline
+    #ifdef is_stencil
+    pass mayu_stencil
+    {
+        cullmode = ccw;
+        ZEnable = FALSE;
+        VertexShader = compile vs_3_0 vs_model();
+        PixelShader = compile ps_3_0 ps_model();
+    }
+    #endif
+    pass outline
     {
         cullmode = cw;
         VertexShader = compile vs_3_0 vs_edge();
