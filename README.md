@@ -1,3 +1,8 @@
+if this gets taken down then that's the end of my active update
+
+so report bugs now while you can
+
+
 Your only hint as for what game this could POSSIBLY be is there are two twinks
 
 everything you'll need to know will be in material.fx
