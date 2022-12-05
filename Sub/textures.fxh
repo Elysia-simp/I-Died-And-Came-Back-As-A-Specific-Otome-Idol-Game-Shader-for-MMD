@@ -79,3 +79,14 @@ sampler EdgeMaskSampler = sampler_state
 	ADDRESSV = WRAP;
 };
 #endif
+
+texture matcapTexture : TEXTURE < string ResourceName = merge_strings("Default/", MatCap_Tex); >;
+sampler matcapSampler = sampler_state 
+{
+	texture = < EdgeMaskTexture >;
+	MINFILTER = LINEAR;
+	MAGFILTER = LINEAR;
+	MIPFILTER = ANISOTROPIC;
+	ADDRESSU = WRAP;
+	ADDRESSV = WRAP;
+};
