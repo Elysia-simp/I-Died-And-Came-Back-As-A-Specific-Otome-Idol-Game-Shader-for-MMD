@@ -112,6 +112,9 @@ float4 ps_model(vs_out i, float vface : VFACE, uniform bool is_peeking) : COLOR0
     float4 ToonTex = tex2D(ToonSampler, ndotl); //sample ndotl
     //rimlight
     float4 rim = tex2D(RimSampler, ndotv); //sample ndotv
+    #ifdef rim_intensity
+    rim *= rim_intensity;
+    #endif
 
     //also note for when you deal with ramp textures always CLAMP them
     //wrap will give you several errors
