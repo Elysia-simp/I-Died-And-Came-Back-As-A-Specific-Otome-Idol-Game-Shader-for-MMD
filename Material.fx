@@ -17,6 +17,10 @@ bool use_edgemask = false; //some of them are just pure white... you can just le
 bool use_matcap = true;
 #define matcap_brightness 0.2f
 
+
+//temp
+//#define rim_intensity 1.0f
+
 //specular options
 #define specular_power 14.5
 #define specular_brightness 2.0f
