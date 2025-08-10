@@ -1,15 +1,19 @@
-if this gets taken down then that's the end of my active update
+A complete rework is in development.
 
-so report bugs now while you can
+no ETA at this time.
+
+~~if this gets taken down then that's the end of my active update~~
+
+~~so report bugs now while you can~~
 
 
-Your only hint as for what game this could POSSIBLY be is there are two twinks
+~~Your only hint as for what game this could POSSIBLY be is there are two twinks~~
 
-everything you'll need to know will be in material.fx
+~~everything you'll need to know will be in material.fx~~
 
 
-# Credits
+~~# Credits~~
 
-[HariganeP](https://seiga.nicovideo.jp/seiga/im4112225) for HgShadow_ObjHeader
+~~[HariganeP](https://seiga.nicovideo.jp/seiga/im4112225) for HgShadow_ObjHeader~~
 
-Still not writing my own shadow pass for mmd
+~~Still not writing my own shadow pass for mmd~~
